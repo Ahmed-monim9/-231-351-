@@ -9,7 +9,7 @@ MyTcpServer::~MyTcpServer()
     mTcpServer->close();
     //server_status=0;
 }
-
+//Закрывает сервер (mTcpServer->close()), освобождая ресурсы перед завершением работы сервера.
 MyTcpServer::MyTcpServer(QObject *parent) : QObject(parent){
     mTcpServer = new QTcpServer(this);
 
@@ -23,7 +23,7 @@ MyTcpServer::MyTcpServer(QObject *parent) : QObject(parent){
         qDebug() << "server is started";
     }
 }
-
+//Проверяет наличие новых подключений с помощью
 void MyTcpServer::slotNewConnection() {
     while (mTcpServer->hasPendingConnections()) {
         QTcpSocket *clientSocket = mTcpServer->nextPendingConnection();
@@ -33,7 +33,10 @@ void MyTcpServer::slotNewConnection() {
         connect(clientSocket, &QTcpSocket::disconnected, this, &MyTcpServer::slotClientDisconnected);
     }
 }
-
+//Получает объект сокета клиента, отправившего данные.
+Если данные поступили, они читаются в буфер.
+Если клиент передает символ \x01, считается, что передача данных завершена,
+    
 void MyTcpServer::slotServerRead() {
     QTcpSocket *clientSocket = qobject_cast<QTcpSocket*>(sender());
     if (!clientSocket) return;
@@ -58,6 +61,9 @@ void MyTcpServer::slotServerRead() {
         clientSocket->write(parsing(res));
     }
 }
+//Удаляет запись о клиенте из списка mClientSockets.
+Освобождает ресурсы, связанные с клиентом, с помощью clientSocket->deleteLater().
+    
 void MyTcpServer::slotClientDisconnected() {
     QTcpSocket *clientSocket = qobject_cast<QTcpSocket*>(sender());
     int descriptor = clientSocket->socketDescriptor();
