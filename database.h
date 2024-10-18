@@ -11,7 +11,8 @@
 
 class dataBase;
 
-class dataBaseDestroyer
+class dataBaseDestroyer //
+Назначение: Удаляет экземпляр класса dataBase при завершении программы, обеспечивая безопасное освобождение ресурсов
 {
 private:
     dataBase * p_instance;
@@ -19,7 +20,8 @@ public:
     ~dataBaseDestroyer();
     void initialize(dataBase * p){p_instance = p;};
 };
-
+//
+Назначение: Управляет подключением к базе данных и выполнением SQL-запросов.
 class dataBase {
 private:
     static dataBase * p_instance;
@@ -37,8 +39,9 @@ protected:
     friend class dataBaseDestroyer;
 public:
     ~dataBase();
-    static dataBase* getInstance();
-    QStringList send_query(QStringList queryStr);
+    static dataBase* getInstance();// Возвращает указатель на единственный экземпляр класса (реализует паттерн Singleton).
+
+    QStringList send_query(QStringList queryStr); // Выполняет SQL-запрос на основе входных параметров и возвращает результаты в виде списка строк.
    // void connect();
     //void disconnect();
 };
