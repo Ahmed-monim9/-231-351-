@@ -2,21 +2,25 @@
 
 
 dataBase* dataBase::p_instance = nullptr;
+//Указатель на единственный экземпляр класса dataBase изначально установлен в nullptr.
+dataBaseDestroyer dataBase::destroyer;
+Создается объект dataBaseDestroyer, который отвечает за удаление экземпляра dataBase при завершении программы.
 dataBaseDestroyer dataBase::destroyer;
 
 dataBaseDestroyer::~dataBaseDestroyer() {
     delete p_instance;
+    //При уничтожении объекта dataBaseDestroyer удаляется экземпляр класса dataBase, освобождая ресурсы базы данных
 }
 
 
 dataBase::~dataBase() {
     if (p_instance) {
         mydb.close();
-        delete p_instance;
+        delete p_instance;// если экземпляр существует, вызывается метод mydb.close() для закрытия базы данных, а затем удаляется объект базы данных
     }
 }
 
-dataBase* dataBase::getInstance() {
+dataBase* dataBase::getInstance() {//Этот метод возвращает единственный экземпляр dataBase
     if (!p_instance)
     {
         p_instance = new dataBase();
@@ -26,15 +30,14 @@ dataBase* dataBase::getInstance() {
 }
 
 dataBase::dataBase() {
-    mydb = QSqlDatabase::addDatabase("QSQLITE");
+    mydb = QSqlDatabase::addDatabase("QSQLITE");//В конструкторе происходит подключение к базе данных SQLite с использованием QSqlDatabase::addDatabase("QSQLITE"). 
     mydb.setDatabaseName("../QT/sqlite.db");
 
     if(!mydb.open())
         qDebug()<<mydb.lastError().text();
 }
 
-
-QStringList dataBase::send_query(QStringList queryStrList) {
+) {
     QSqlQuery myquery(mydb);
     QString queryStr = queryMap[queryStrList[0]];
     myquery.prepare(queryStr);
@@ -43,7 +46,7 @@ QStringList dataBase::send_query(QStringList queryStrList) {
     }
     bool success = myquery.exec();
     QStringList res;
-
+//Выполняется запрос для проверки существования пользователя. Если пользователь найден, в результат добавляется его логин.
     if (queryStrList[0] == "checkUser") {
         myquery.prepare(queryMap[queryStrList[0]]);
         myquery.bindValue(":log", queryStrList[1]);
@@ -51,6 +54,7 @@ QStringList dataBase::send_query(QStringList queryStrList) {
             QString login = myquery.value("Login").toString();
             res << login;
         }
+        //Запрос на регистрацию нового пользователя. Если вставка прошла успешно, выполняется дополнительный запрос для получения данных
     } else if(queryStrList[0] == "auth") {
         if(myquery.next()) {
             QString login = myquery.value("Login").toString();
@@ -80,7 +84,7 @@ QStringList dataBase::send_query(QStringList queryStrList) {
                 res << userInfo;
             }
         } else {
-            qDebug() << "строки не затронуты";
+            qDebug() << "строки не затронуты";//Если запрос не удается выполнить, выводится сообщение об ошибке в консоль с помощью qDebug()
         }
     }
     return res;
