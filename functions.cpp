@@ -5,7 +5,7 @@
 #include <QStringList>
 #include "database.h"
 #include "graph.h"
-
+// Разбирает строку данных, полученную от клиента, и вызывает соответствующую функцию обработки (auth, reg, или graph).
 QByteArray parsing (QString data_from_client) {
     QStringList data_from_client_list = data_from_client.split(QLatin1Char('&'));
     if ((data_from_client_list[0] == "auth" and data_from_client_list.size() < 4) or (data_from_client_list[0] == "reg" and data_from_client_list.size() < 5)) {
@@ -22,7 +22,7 @@ QByteArray parsing (QString data_from_client) {
     else
         return "error1\r\n";
 }
-
+//Вызывает метод send_query для проверки данных пользователя в базе по логину и паролю.
 QByteArray auth (QString log, QString pass) {
     QStringList response = dataBase::getInstance()->send_query(QStringList{"auth", log, pass});
     qDebug()<<response;
@@ -32,7 +32,7 @@ QByteArray auth (QString log, QString pass) {
         return QString("auth-\r\n").toUtf8();
     }
 }
-
+//Проверяет, существует ли уже пользователь с данным логином, вызывая send_query с запросом checkUse
 QByteArray reg (QString log, QString pass, QString mail) {
     QStringList checkUserExists = dataBase::getInstance()->send_query(QStringList{"checkUser", log});
     if(!checkUserExists.isEmpty()) {
@@ -45,6 +45,7 @@ QByteArray reg (QString log, QString pass, QString mail) {
         return QString("reg- Registration failed\r\n").toUtf8();
     }
 }
+//Создает объект list_graph и заполняет его рёбрами, переданными клиентом.
 
 QByteArray graph(QStringList array) {
     if(array[0].length() > 1 or array[1].length() > 1) {
