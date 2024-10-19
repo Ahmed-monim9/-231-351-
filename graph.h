@@ -7,7 +7,7 @@
 #include <stack>
 #include <limits>
 #include <unordered_map>
-
+//Инициализирует ребро значением val, устанавливая указатели next и prev как nullptr.
 struct edge {
     int val;
     edge* next;
@@ -22,8 +22,8 @@ struct vertex {
     vertex* next;
     vertex* prev;
     int cnt;
-    vertex(int numb);
-    bool push(int val);
+    vertex(int numb); //указатели на первое и последнее ребро как nullptr, и счётчик рёбер cnt как 0.
+    bool push(int val);// становится первым и последним. В противном случае добавляется в конец списка рёбер.
     bool pop(int index);
     void print();
 };
@@ -37,9 +37,11 @@ public:
     list_graph();
     QString BFS(int start_index, int end_index);
     bool push(int index, int val);
-    bool pop(int index);
+    bool pop(int index);//Удаляет ребро по индексу в вершине.
+Логика: Если индекс находится за пределами списка рёбер или если нет рёбер, возвращается false
     bool pop(int index_vertex, int index_edge);
     void print();
+//Печатает все рёбра вершины, выводя их значения и индексы в консоль
 };
 
 
