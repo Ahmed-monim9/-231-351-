@@ -9,18 +9,18 @@ dataBaseDestroyer dataBase::destroyer;
 
 dataBaseDestroyer::~dataBaseDestroyer() {
     delete p_instance;
-    //При уничтожении объекта dataBaseDestroyer удаляется экземпляр класса dataBase, освобождая ресурсы базы данных
+   
 }
 
 
 dataBase::~dataBase() {
     if (p_instance) {
         mydb.close();
-        delete p_instance;// если экземпляр существует, вызывается метод mydb.close() для закрытия базы данных, а затем удаляется объект базы данных
+        delete p_instance;
     }
 }
 
-dataBase* dataBase::getInstance() {//Этот метод возвращает единственный экземпляр dataBase
+dataBase* dataBase::getInstance() {
     if (!p_instance)
     {
         p_instance = new dataBase();
@@ -30,7 +30,7 @@ dataBase* dataBase::getInstance() {//Этот метод возвращает е
 }
 
 dataBase::dataBase() {
-    mydb = QSqlDatabase::addDatabase("QSQLITE");//В конструкторе происходит подключение к базе данных SQLite с использованием QSqlDatabase::addDatabase("QSQLITE"). 
+    mydb = QSqlDatabase::addDatabase("QSQLITE");
     mydb.setDatabaseName("../QT/sqlite.db");
 
     if(!mydb.open())
@@ -46,7 +46,7 @@ dataBase::dataBase() {
     }
     bool success = myquery.exec();
     QStringList res;
-//Выполняется запрос для проверки существования пользователя. Если пользователь найден, в результат добавляется его логин.
+
     if (queryStrList[0] == "checkUser") {
         myquery.prepare(queryMap[queryStrList[0]]);
         myquery.bindValue(":log", queryStrList[1]);
@@ -54,7 +54,7 @@ dataBase::dataBase() {
             QString login = myquery.value("Login").toString();
             res << login;
         }
-        //Запрос на регистрацию нового пользователя. Если вставка прошла успешно, выполняется дополнительный запрос для получения данных
+      
     } else if(queryStrList[0] == "auth") {
         if(myquery.next()) {
             QString login = myquery.value("Login").toString();
@@ -84,7 +84,7 @@ dataBase::dataBase() {
                 res << userInfo;
             }
         } else {
-            qDebug() << "строки не затронуты";//Если запрос не удается выполнить, выводится сообщение об ошибке в консоль с помощью qDebug()
+            qDebug() << "строки не затронуты";//
         }
     }
     return res;
