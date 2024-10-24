@@ -6,12 +6,12 @@
 #include <QString>
 
 using namespace std;
-//указатели на следующие и предыдущие рёбра как nullptr
+
 
     edge::edge(int val) : next(nullptr), prev(nullptr), val(val) {}
-//указатели на первое и последнее ребро как nullptr, и счётчик рёбер cnt как 0.
+
     vertex::vertex(int numb) : index(numb), first(nullptr), last(nullptr), next(nullptr), prev(nullptr), cnt(0) {}
-//Добавляет новое ребро со значением val в вершину
+
     bool vertex::push(int val) {
         edge* n = new edge(val);
         if (first == nullptr) {
@@ -25,7 +25,7 @@ using namespace std;
         cnt++;
         return true;
     }
-//Удаляет ребро по индексу из списка рёбер вершины.
+
     bool vertex::pop(int index) {
         if (index >= cnt or index < 0) {
             return false;
@@ -74,7 +74,7 @@ using namespace std;
             return true;
         }
     }
-//Печатает список рёбер, связанных с вершиной
+
     void vertex::print() {
         edge* p = first;
         int x(0);
@@ -85,7 +85,7 @@ using namespace std;
         }
         cout << "\n";
     }
-// Проходит по всем вершинам в графе и возвращает указатель на найденную вершину
+
     vertex* list_graph::find_vertex(int index) {
         vertex* v = first;
         while (v != nullptr) {
@@ -96,9 +96,9 @@ using namespace std;
         }
         return nullptr;
     }
-//инициализирует граф как пустой
+
     list_graph::list_graph() : first(nullptr), last(nullptr), cnt(0) {}
-//Реализует алгоритм поиска в ширину (BFS) для нахождения кратчайшего пути от вершины start_index до вершины end_index.
+
     QString list_graph::BFS(int start_index, int end_index) {
         unordered_map<int, bool> visited;
         unordered_map<int, int> distance;
