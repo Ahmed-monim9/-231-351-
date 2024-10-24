@@ -2,7 +2,7 @@
 
 
 dataBase* dataBase::p_instance = nullptr;
-//Указатель на единственный экземпляр класса dataBase изначально установлен в nullptr.
+
 dataBaseDestroyer dataBase::destroyer;
 Создается объект dataBaseDestroyer, который отвечает за удаление экземпляра dataBase при завершении программы.
 dataBaseDestroyer dataBase::destroyer;
